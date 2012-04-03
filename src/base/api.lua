@@ -90,6 +90,12 @@
 			scope = "config",
 		},
 		
+		xcodebuildsettings =
+		{
+			kind  = "list",
+			scope = "config",
+		},
+		
 		deploymentoptions =
 		{
 			kind  = "list",
