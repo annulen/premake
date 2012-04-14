@@ -738,7 +738,16 @@
 			_p(4,'COPY_PHASE_STRIP = NO;')
 		end
 		
-		_p(4,'GCC_C_LANGUAGE_STANDARD = gnu99;')
+		-- TODO: Remove this nasty exception hack for Chipmunk, and either detect when 
+		--        we already have the -std option set, or use a better method of passing 
+		--        this configuration option down through premake.
+		if cfg.buildtarget.basename == "chipmunk" then
+			_p(4,'GCC_C_LANGUAGE_STANDARD = gnu99;')
+		else
+			-- Note: If this is c89 instead of gnu89, then we break on // type comments, 
+			--        which, prior to c99, was only a GNU extension.
+			_p(4,'GCC_C_LANGUAGE_STANDARD = gnu89;') 
+		end
 		
 		if cfg.flags.NoExceptions then
 			_p(4,'GCC_ENABLE_CPP_EXCEPTIONS = NO;')
