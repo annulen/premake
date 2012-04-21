@@ -62,6 +62,10 @@
 			iscrosscompiler = true,
 			namestyle       = "windows",
 		},
+		iPhone = 
+		{ 
+			cfgsuffix       = "iphone",
+		},
 	}
 
 

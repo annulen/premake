@@ -220,7 +220,11 @@
 --    The Xcode specific list tag.
 --
 
-	function xcode.printlist(list, tag)
+	function xcode.printlist(list, tag, cfg)
+		if xcode.BuildSettingsExists(tag, cfg) then
+			return -- Don't write settings
+		end
+
 		if #list > 0 then
 			_p(4,'%s = (', tag)
 			for _, item in ipairs(list) do
@@ -230,6 +234,63 @@
 		end
 	end
 
+
+	
+--
+-- Check if build settings is overrided by user with xcodebuildsettings {} 
+-- @param buildsettingName
+--    The list of values to be printed.
+-- @param cfg
+--    configuration
+--
+	function xcode.BuildSettingsExists(buildsettingName, cfg) 
+		if #cfg.xcodebuildsettings > 0 then
+			for _, item in ipairs(cfg.xcodebuildsettings) do
+				local _, k = string.find(item, "=")
+				local itemName =  string.sub(item, 1, k - 1)
+				itemName = string.gsub(itemName, "%s", "")
+			end
+		end
+		return false
+	end
+
+--
+-- Print user build settings contained in xcodebuildsettings
+-- @param offset
+--    offset used by function _p
+-- @param cfg
+--    configuration
+--
+
+	function xcodePrintUserSettings(offset, cfg)
+		for _, item in ipairs(cfg.xcodebuildsettings) do
+			_p(offset, item .. ';')
+		end
+	end
+
+--
+-- Print xcode build setting if not overrided by user
+-- @param offset
+--    offset used by function _p
+-- @param cfg
+--    configuration
+--
+
+	function xcode.PrintBuildSetting(offset, buildsetting, cfg)
+		-- Check that the settings was not overriden by xcode buildsettings
+		if #cfg.xcodebuildsettings > 0 then
+			
+			local _, j = string.find(buildsetting, "=")
+			local buildsettingName =  string.sub(buildsetting, 1, j - 1)
+			buildsettingName = string.gsub(buildsettingName, "%s", "")
+			
+			if xcode.BuildSettingsExists(buildsettingName, cfg) then
+				return
+			end
+		end
+		
+		_p(offset, buildsetting)
+	end
 
 ---------------------------------------------------------------------------
 -- Section generator functions, in the same order in which they appear
@@ -673,26 +734,37 @@
 		_p(2,'%s /* %s */ = {', cfg.xcode.targetid, cfgname)
 		_p(3,'isa = XCBuildConfiguration;')
 		_p(3,'buildSettings = {')
-		_p(4,'ALWAYS_SEARCH_USER_PATHS = NO;')
+		--_p(4,'ALWAYS_SEARCH_USER_PATHS = NO;')
+
+		xcodePrintUserSettings(4, cfg)
+		
+		xcode.PrintBuildSetting(4,'ALWAYS_SEARCH_USER_PATHS = NO;', cfg)
+
 
 		if not cfg.flags.Symbols then
-			_p(4,'DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";')
+			--_p(4,'DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";')
+			xcode.PrintBuildSetting(4,'DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";', cfg)
 		end
 		
 		if cfg.kind ~= "StaticLib" and cfg.buildtarget.prefix ~= "" then
-			_p(4,'EXECUTABLE_PREFIX = %s;', cfg.buildtarget.prefix)
+			--_p(4,'EXECUTABLE_PREFIX = %s;', cfg.buildtarget.prefix)
+			xcode.PrintBuildSetting(4,'EXECUTABLE_PREFIX = '.. cfg.buildtarget.prefix .. ';', cfg)
 		end
 		
 		local outdir = path.getdirectory(cfg.buildtarget.bundlepath)
 		if outdir ~= "." then
-			_p(4,'CONFIGURATION_BUILD_DIR = %s;', outdir)
+			--_p(4,'CONFIGURATION_BUILD_DIR = %s;', outdir)
+			xcode.PrintBuildSetting(4,'CONFIGURATION_BUILD_DIR = "' .. outdir .. '";', cfg)
 		end
 
-		_p(4,'GCC_DYNAMIC_NO_PIC = NO;')
-		_p(4,'GCC_MODEL_TUNING = G5;')
+		--_p(4,'GCC_DYNAMIC_NO_PIC = NO;')
+		--_p(4,'GCC_MODEL_TUNING = G5;')
+		xcode.PrintBuildSetting(4,'GCC_DYNAMIC_NO_PIC = NO;',cfg)
+		xcode.PrintBuildSetting(4,'GCC_MODEL_TUNING = G5;', cfg)
 
 		if tr.infoplist then
-			_p(4,'INFOPLIST_FILE = "%s";', tr.infoplist.path)
+		--	_p(4,'INFOPLIST_FILE = "%s";', tr.infoplist.path)
+			xcode.PrintBuildSetting( 4,'INFOPLIST_FILE = "' .. tr.infoplist.path ..  '";', cfg)
 		end
 
 		installpaths = {
@@ -701,9 +773,10 @@
 			SharedLib = '/usr/local/lib',
 			StaticLib = '/usr/local/lib',
 		}
-		_p(4,'INSTALL_PATH = %s;', installpaths[cfg.kind])
-
-		_p(4,'PRODUCT_NAME = "%s";', cfg.buildtarget.basename)
+		--_p(4,'INSTALL_PATH = %s;', installpaths[cfg.kind])
+		xcode.PrintBuildSetting(4,'INSTALL_PATH = ' .. installpaths[cfg.kind] .. ';', cfg)
+		--_p(4,'PRODUCT_NAME = "%s";', cfg.buildtarget.basename)
+		xcode.PrintBuildSetting(4,'PRODUCT_NAME = "' .. cfg.buildtarget.basename .. '";', cfg)
 		_p(3,'};')
 		_p(3,'name = "%s";', cfgname)
 		_p(2,'};')
@@ -716,7 +789,9 @@
 		_p(2,'%s /* %s */ = {', cfg.xcode.projectid, cfgname)
 		_p(3,'isa = XCBuildConfiguration;')
 		_p(3,'buildSettings = {')
-		
+	
+		xcodePrintUserSettings(4, cfg)
+	
 		local archs = {
 			Native = "$(NATIVE_ARCH_ACTUAL)",
 			x32    = "i386",
@@ -724,68 +799,96 @@
 			Universal32 = "$(ARCHS_STANDARD_32_BIT)",
 			Universal64 = "$(ARCHS_STANDARD_64_BIT)",
 			Universal = "$(ARCHS_STANDARD_32_64_BIT)",
+			iPhone = '(armv6, armv7)',
 		}
-		_p(4,'ARCHS = "%s";', archs[cfg.platform])
+		--_p(4,'ARCHS = "%s";', archs[cfg.platform])
+
+		if cfg.platform:lower() == "iphone" then
+			xcode.PrintBuildSetting(4,'SDKROOT = iphoneos;', cfg)
+		else
+			xcode.PrintBuildSetting(4,'SDKROOT = macosx;', cfg)
+		end
+		
+		xcode.PrintBuildSetting(4,'ARCHS = "'.. archs[cfg.platform] ..'";', cfg)
 		
 		local targetdir = path.getdirectory(cfg.buildtarget.bundlepath)
 		if targetdir ~= "." then
-			_p(4,'CONFIGURATION_BUILD_DIR = "$(SYMROOT)";');
+			--_p(4,'CONFIGURATION_BUILD_DIR = "$(SYMROOT)";');
+			xcode.PrintBuildSetting(4,'CONFIGURATION_BUILD_DIR = "$(SYMROOT)";', cfg);
 		end
 		
-		_p(4,'CONFIGURATION_TEMP_DIR = "$(OBJROOT)";')
-		
+		--_p(4,'CONFIGURATION_TEMP_DIR = "$(OBJROOT)";')
+		xcode.PrintBuildSetting(4, 'CONFIGURATION_TEMP_DIR = "$(OBJROOT)";', cfg)
+
 		if cfg.flags.Symbols then
-			_p(4,'COPY_PHASE_STRIP = NO;')
+	--		_p(4,'COPY_PHASE_STRIP = NO;')
+			xcode.PrintBuildSetting(4,'COPY_PHASE_STRIP = NO;', cfg)
 		end
 		
-		_p(4,'GCC_C_LANGUAGE_STANDARD = gnu99;')
-		
+		--_p(4,'GCC_C_LANGUAGE_STANDARD = gnu99;')
+		xcode.PrintBuildSetting(4,'GCC_C_LANGUAGE_STANDARD = gnu99;', cfg)
+	
 		if cfg.flags.NoExceptions then
-			_p(4,'GCC_ENABLE_CPP_EXCEPTIONS = NO;')
+			--_p(4,'GCC_ENABLE_CPP_EXCEPTIONS = NO;')
+			xcode.PrintBuildSetting(4,'GCC_ENABLE_CPP_EXCEPTIONS = NO;', cfg)
 		end
 		
 		if cfg.flags.NoRTTI then
-			_p(4,'GCC_ENABLE_CPP_RTTI = NO;')
+			--_p(4,'GCC_ENABLE_CPP_RTTI = NO;')
+			xcode.PrintBuildSetting( 4,'GCC_ENABLE_CPP_RTTI = NO;', cfg)
 		end
 		
 		if _ACTION ~= "xcode4" and cfg.flags.Symbols and not cfg.flags.NoEditAndContinue then
-			_p(4,'GCC_ENABLE_FIX_AND_CONTINUE = YES;')
+			--_p(4,'GCC_ENABLE_FIX_AND_CONTINUE = YES;')
+			xcode.PrintBuildSetting(4,'GCC_ENABLE_FIX_AND_CONTINUE = YES;', cfg)
 		end
 		
 		if cfg.flags.NoExceptions then
-			_p(4,'GCC_ENABLE_OBJC_EXCEPTIONS = NO;')
+			--_p(4,'GCC_ENABLE_OBJC_EXCEPTIONS = NO;')
+			xcode.PrintBuildSetting(4,'GCC_ENABLE_OBJC_EXCEPTIONS = NO;', cfg)
 		end
 		
 		if cfg.flags.Optimize or cfg.flags.OptimizeSize then
-			_p(4,'GCC_OPTIMIZATION_LEVEL = s;')
+			--_p(4,'GCC_OPTIMIZATION_LEVEL = s;')
+			xcode.PrintBuildSetting(4,'GCC_OPTIMIZATION_LEVEL = s;', cfg)
 		elseif cfg.flags.OptimizeSpeed then
-			_p(4,'GCC_OPTIMIZATION_LEVEL = 3;')
+			--_p(4,'GCC_OPTIMIZATION_LEVEL = 3;')
+			xcode.PrintBuildSetting(4,'GCC_OPTIMIZATION_LEVEL = 3;', cfg)
 		else
-			_p(4,'GCC_OPTIMIZATION_LEVEL = 0;')
+			--_p(4,'GCC_OPTIMIZATION_LEVEL = 0;')
+			xcode.PrintBuildSetting(4,'GCC_OPTIMIZATION_LEVEL = 0;', cfg)
 		end
 		
 		if cfg.pchheader and not cfg.flags.NoPCH then
-			_p(4,'GCC_PRECOMPILE_PREFIX_HEADER = YES;')
-			_p(4,'GCC_PREFIX_HEADER = "%s";', cfg.pchheader)
+			--_p(4,'GCC_PRECOMPILE_PREFIX_HEADER = YES;')
+			--_p(4,'GCC_PREFIX_HEADER = "%s";', cfg.pchheader)
+			xcode.PrintBuildSetting(4,'GCC_PRECOMPILE_PREFIX_HEADER = YES;', cfg)
+			xcode.PrintBuildSetting(4,'GCC_PREFIX_HEADER = "' ..  cfg.pchheader .. '";', cfg)
 		end
 		
-		xcode.printlist(cfg.defines, 'GCC_PREPROCESSOR_DEFINITIONS')
+		xcode.printlist(cfg.defines, 'GCC_PREPROCESSOR_DEFINITIONS',cfg)
 
-		_p(4,'GCC_SYMBOLS_PRIVATE_EXTERN = NO;')
-		
+		--_p(4,'GCC_SYMBOLS_PRIVATE_EXTERN = NO;')
+		xcode.PrintBuildSetting(4,'GCC_SYMBOLS_PRIVATE_EXTERN = NO;', cfg)		
+
 		if cfg.flags.FatalWarnings then
-			_p(4,'GCC_TREAT_WARNINGS_AS_ERRORS = YES;')
+			--_p(4,'GCC_TREAT_WARNINGS_AS_ERRORS = YES;')
+			xcode.PrintBuildSetting(4,'GCC_TREAT_WARNINGS_AS_ERRORS = YES;', cfg)
 		end
 		
-		_p(4,'GCC_WARN_ABOUT_RETURN_TYPE = YES;')
-		_p(4,'GCC_WARN_UNUSED_VARIABLE = YES;')
+		--_p(4,'GCC_WARN_ABOUT_RETURN_TYPE = YES;')
+		--_p(4,'GCC_WARN_UNUSED_VARIABLE = YES;')
+		xcode.PrintBuildSetting(4,'GCC_WARN_ABOUT_RETURN_TYPE = YES;', cfg)
+		xcode.PrintBuildSetting(4,'GCC_WARN_UNUSED_VARIABLE = YES;', cfg)
 
-		xcode.printlist(cfg.includedirs, 'HEADER_SEARCH_PATHS')
-		xcode.printlist(cfg.libdirs, 'LIBRARY_SEARCH_PATHS')
+		xcode.printlist(cfg.includedirs, 'HEADER_SEARCH_PATHS',cfg)
+		xcode.printlist(cfg.libdirs, 'LIBRARY_SEARCH_PATHS',cfg)
 		
-		_p(4,'OBJROOT = "%s";', cfg.objectsdir)
+		--_p(4,'OBJROOT = "%s";', cfg.objectsdir)
+		--_p(4,'ONLY_ACTIVE_ARCH = %s;',iif(premake.config.isdebugbuild(cfg),'YES','NO'))
 
-		_p(4,'ONLY_ACTIVE_ARCH = %s;',iif(premake.config.isdebugbuild(cfg),'YES','NO'))
+		xcode.PrintBuildSetting(4,'OBJROOT = "' .. cfg.objectsdir .. '";', cfg)
+		xcode.PrintBuildSetting(4,'ONLY_ACTIVE_ARCH = '..  iif(premake.config.isdebugbuild(cfg),'YES','NO')  ..';', cfg)
 		
 		-- build list of "other" C/C++ flags
 		local checks = {
@@ -800,7 +903,7 @@
 				table.insert(flags, flag)
 			end
 		end
-		xcode.printlist(table.join(flags, cfg.buildoptions), 'OTHER_CFLAGS')
+		xcode.printlist(table.join(flags, cfg.buildoptions), 'OTHER_CFLAGS',cfg)
 
 		-- build list of "other" linked flags. All libraries that aren't frameworks
 		-- are listed here, so I don't have to try and figure out if they are ".a"
@@ -812,20 +915,23 @@
 			end
 		end
 		flags = table.join(flags, cfg.linkoptions)
-		xcode.printlist(flags, 'OTHER_LDFLAGS')
+		xcode.printlist(flags, 'OTHER_LDFLAGS',cfg)
 		
 		if cfg.flags.StaticRuntime then
-			_p(4,'STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = static;')
+			--_p(4,'STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = static;')
+			xcode.PrintBuildSetting(4, 'STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = static;', cfg)
 		end
 		
 		if targetdir ~= "." then
-			_p(4,'SYMROOT = "%s";', targetdir)
+			--_p(4,'SYMROOT = "%s";', targetdir)
+			xcode.PrintBuildSetting(4,'SYMROOT = "' .. targetdir .. '";', cfg)
 		end
 		
 		if cfg.flags.ExtraWarnings then
-			_p(4,'WARNING_CFLAGS = "-Wall";')
+			--_p(4,'WARNING_CFLAGS = "-Wall";')
+			xcode.PrintBuildSetting(4,'WARNING_CFLAGS = "-Wall";', cfg)
 		end
-		
+			
 		_p(3,'};')
 		_p(3,'name = "%s";', cfgname)
 		_p(2,'};')

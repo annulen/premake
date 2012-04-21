@@ -56,6 +56,12 @@
 			tokens = true,
 		},
 		
+		xcodebuildsettings =
+		{
+			kind  = "list",
+			scope = "config",
+		},
+		
 		deploymentoptions =
 		{
 			kind  = "list",

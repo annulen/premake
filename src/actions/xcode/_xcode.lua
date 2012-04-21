@@ -28,6 +28,7 @@
 			Universal32 = "32-bit Universal", 
 			Universal64 = "64-bit Universal", 
 			Universal = "Universal",
+			iPhone = "iPhone"
 		},
 		
 		default_platform = "Universal",
