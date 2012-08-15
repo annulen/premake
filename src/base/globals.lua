@@ -59,6 +59,11 @@
 			iscrosscompiler = true,
 			namestyle       = "windows",
 		},
+		Android = 
+		{ 
+			cfgsuffix       = "android",
+			iscrosscompiler = true,
+		},
 	}
 
 
