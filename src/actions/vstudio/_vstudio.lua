@@ -153,6 +153,8 @@
 		local extension
 		if prj.language == "C#" then
 			extension = ".csproj"
+		elseif _ACTION == "monodevelop" then
+			extension = ".cproj"
 		else
 			extension = iif(_ACTION > "vs2008", ".vcxproj", ".vcproj")
 		end
@@ -330,7 +332,12 @@
 		if (prj.language == "C#") then
 			return "FAE04EC0-301F-11D3-BF4B-00C04F79EFBC"
 		else
-			return "8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942"
+			if _ACTION == "monodevelop" then
+				-- MonoDevelop seems to use a different UID to identify C/C++
+				return "2857B73E-F847-4B02-9238-064979017E93"
+			else
+				return "8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942"
+			end
 		end
 	end
 
