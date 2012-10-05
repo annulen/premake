@@ -390,6 +390,7 @@
 			"C",
 			"C++",
 			"C#",
+			"D",
 		},
 	}
 
@@ -606,6 +607,9 @@
 			"gcc",
 			"msc",
 			"snc",
+			"dmd",
+			"gdc",
+			"ldc",
 		},
 	}
 
@@ -763,6 +767,18 @@
 			{ "msnet",   "Microsoft .NET (csc)" },
 			{ "mono",    "Novell Mono (mcs)"    },
 			{ "pnet",    "Portable.NET (cscc)"  },
+		}
+	}
+
+	newoption
+	{
+		trigger     = "dc",
+		value       = "VALUE",
+		description = "Choose a D compiler set",
+		allowed = {
+			{ "dmd",   "Digital Mars DMD (default)" },
+			{ "gdc",   "GNU GDC (gdc)"    },
+			{ "ldc",   "LLVM LDC (ldc2)"  },
 		}
 	}
 

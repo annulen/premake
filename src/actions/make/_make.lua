@@ -21,11 +21,12 @@
 
 		valid_kinds     = { "ConsoleApp", "WindowedApp", "StaticLib", "SharedLib" },
 
-		valid_languages = { "C", "C++", "C#" },
+		valid_languages = { "C", "C++", "C#", "D" },
 
 		valid_tools     = {
 			cc     = { "clang", "gcc" },
 			dotnet = { "mono", "msnet", "pnet" }
+			dc     = { "dmd", "gdc", "ldc" },
 		},
 
 		onsolution = function(sln)
@@ -38,6 +39,8 @@
 			local makefile = make.getmakefilename(prj, true)
 			if project.isdotnet(prj) then
 				premake.generate(prj, makefile, make.cs.generate)
+			elseif premake.isd(prj) then
+				premake.generate(prj, makefile, make.d.generate)
 			else
 				premake.generate(prj, makefile, make.cpp.generate)
 			end

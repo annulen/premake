@@ -91,6 +91,9 @@
 	dofile("tools/test_gcc.lua")
 	dofile("tools/test_msc.lua")
 	dofile("tools/test_snc.lua")
+	dofile("tools/test_dmd.lua")
+	dofile("tools/test_gdc.lua")
+	dofile("tools/test_ldc.lua")
 
 	-- Visual Studio 2005-2010 C# projects
 	dofile("actions/vstudio/cs2005/test_assembly_refs.lua")

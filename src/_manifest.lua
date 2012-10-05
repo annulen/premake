@@ -46,12 +46,16 @@
 		"tools/msc.lua",
 		"tools/snc.lua",
 		"tools/clang.lua",
+		"tools/dmd.lua",
+		"tools/gdc.lua",
+		"tools/ldc.lua",
 
 		-- GNU make action
 		"actions/make/_make.lua",
 		"actions/make/make_solution.lua",
 		"actions/make/make_cpp.lua",
 		"actions/make/make_csharp.lua",
+		"actions/make/make_d.lua",
 
 		-- Visual Studio actions
 		"actions/vstudio/_vstudio.lua",
@@ -68,6 +72,7 @@
 		"actions/vstudio/vs2010_vcxproj_filters.lua",
 		"actions/vstudio/vs2012.lua",
 		"actions/vstudio/vs2013.lua",
+		"actions/vstudio/visuald_visualdproj.lua",
 
 		-- Clean action
 		"actions/clean/_clean.lua",
