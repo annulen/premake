@@ -16,7 +16,7 @@ int os_rmdir(lua_State* L)
 #if PLATFORM_WINDOWS
 	z = RemoveDirectory(path);
 #else
-	z = rmdir(path);
+	z = (0==rmdir(path));
 #endif
 
 	if (!z)
