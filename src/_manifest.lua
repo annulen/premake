@@ -53,6 +53,10 @@
 		"actions/make/make_cpp.lua",
 		"actions/make/make_csharp.lua",
 
+		-- NetBeans action
+		"actions/netbeans/_netbeans.lua",
+		"actions/netbeans/netbeans_cpp.lua",
+
 		-- Visual Studio actions
 		"actions/vstudio/_vstudio.lua",
 		"actions/vstudio/vs2005.lua",
