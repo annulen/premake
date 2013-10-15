@@ -294,7 +294,7 @@
 
 	function configfile.confTool(cfg, toolName, flags)
 		_p(4, '<%s>', toolName)
-        if not config.isDebugBuild(cfg) and cfg.flags.ReleaseRuntime then
+		if not config.isDebugBuild(cfg) and cfg.flags.ReleaseRuntime then
 			_p(5, '<developmentMode>5</developmentMode>')
 		end
 		_p(5, '<incDir>')
