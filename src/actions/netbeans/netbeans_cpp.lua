@@ -294,6 +294,9 @@
 
 	function configfile.confTool(cfg, toolName, flags)
 		_p(4, '<%s>', toolName)
+        if not config.isDebugBuild(cfg) and cfg.flags.ReleaseRuntime then
+			_p(5, '<developmentMode>5</developmentMode>')
+		end
 		_p(5, '<incDir>')
 		for _, incdir in ipairs(cfg.includedirs) do
 			_p(6, '<pElem>%s</pElem>', netbeans.escapepath(cfg.project, incdir))
