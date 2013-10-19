@@ -138,8 +138,18 @@
 				break
 			end
 		end
-		
+
+        -- If there are files inside this folder, use the parent folder
 		local numChildren = #tr.children
+		for i = 1, numChildren do
+            -- Only files have relpath set
+			if tr.children[i].relpath then
+                tr = tr.parent
+                numChildren = 1
+                break
+			end
+		end
+		
 		for i = 1, numChildren do
 			local child = 
 			_p(d, '<%s>%s</%s>', tagname, netbeans.escapepath(prj, tr.children[i].path), tagname)
