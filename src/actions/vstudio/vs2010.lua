@@ -38,7 +38,7 @@
 		if premake.project.isdotnet(prj) then
 			premake.generate(prj, ".csproj", vstudio.cs2005.generate)
 			premake.generate(prj, ".csproj.user", vstudio.cs2005.generate_user)
-		else
+		elseif premake.project.iscpp(prj) then
 			premake.generate(prj, ".vcxproj", vstudio.vc2010.generate)
 			premake.generate(prj, ".vcxproj.user", vstudio.vc2010.generateUser)
 			premake.generate(prj, ".vcxproj.filters", vstudio.vc2010.generateFilters)
