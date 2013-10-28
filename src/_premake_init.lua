@@ -816,6 +816,22 @@
 		description = "Display version information"
 	}
 
+	newoption
+	{
+		trigger     = "includedirs",
+		value       = "path",
+		-- TODO ~
+		description = "~"
+	}
+
+	newoption
+	{
+		trigger     = "libdirs",
+		value       = "path",
+		-- TODO ~
+		description = "~"
+	}
+
 
 -----------------------------------------------------------------------------
 --

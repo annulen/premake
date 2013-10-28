@@ -29,6 +29,7 @@
 		"base/context.lua",
 		"base/api.lua",
 		"base/detoken.lua",
+		"base/using.lua",
 
 		-- project APIs
 		"base/project.lua",
@@ -46,7 +47,14 @@
 		"tools/msc.lua",
 		"tools/snc.lua",
 		"tools/clang.lua",
-
+		
+		-- Packages
+		"packages/gtk.lua",
+		"packages/glib.lua",
+		"packages/pango.lua",
+		"packages/cairo.lua",
+		"packages/atk.lua",
+		
 		-- GNU make action
 		"actions/make/_make.lua",
 		"actions/make/make_solution.lua",
