@@ -31,6 +31,14 @@
 		"base/validate.lua",
 		"base/help.lua",
 		"base/premake.lua",
+		"base/using.lua",
+		
+		-- Packages
+		"packages/gtk.lua",
+		"packages/glib.lua",
+		"packages/pango.lua",
+		"packages/cairo.lua",
+		"packages/atk.lua",
 		
 		-- CodeBlocks action
 		"actions/codeblocks/_codeblocks.lua",
