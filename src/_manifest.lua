@@ -76,7 +76,10 @@
 		"actions/vstudio/vs2010_vcxproj_filters.lua",
 		"actions/vstudio/vs2012.lua",
 		"actions/vstudio/vs2013.lua",
-
+		
+		-- MonoDevelop-4.0 C, C++
+		"actions/monodevelop/monodevelop.lua"
+		
 		-- Clean action
 		"actions/clean/_clean.lua",
 	}
