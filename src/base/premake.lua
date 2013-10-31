@@ -50,6 +50,7 @@
 	premake.X32         = "x32"
 	premake.X64         = "x64"
 	premake.XBOX360     = "xbox360"
+	premake.ANDROID     = "android"
 
 
 ---

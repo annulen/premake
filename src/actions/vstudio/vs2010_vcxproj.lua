@@ -257,6 +257,7 @@
 		"manifest",
 		"buildEvents",
 		"imageXex",
+		"antBuild",
 		"deploy",
 	}
 
@@ -307,6 +308,7 @@
 		"multiProcessorCompilation",
 		"additionalCompileOptions",
 		"compileAs",
+		"androidOptions",
 	}
 
 	function vc2010.clCompile(cfg)
@@ -669,6 +671,9 @@
 
 
 	function vc2010.additionalCompileOptions(cfg, condition)
+		if cfg.system == premake.ANDROID then
+			vstudio.vsandroid.additionalOptions(cfg)
+		end
 		if #cfg.buildoptions > 0 then
 			local opts = table.concat(cfg.buildoptions, " ")
 			vc2010.element(3, "AdditionalOptions", condition, '%s %%(AdditionalOptions)', opts)
@@ -727,6 +732,13 @@
 	function vc2010.compileAs(cfg)
 		if cfg.project.language == "C" then
 			_p(3,'<CompileAs>CompileAsC</CompileAs>')
+		end
+	end
+
+
+	function vc2010.androidOptions(cfg)
+		if cfg.system == premake.ANDROID then
+			vstudio.vsandroid.clCompile(cfg)
 		end
 	end
 
@@ -875,6 +887,13 @@
 	function vc2010.imageXexOutput(cfg)
 		if cfg.system == premake.XBOX360 then
 			_x(2,'<ImageXexOutput>$(OutDir)$(TargetName).xex</ImageXexOutput>')
+		end
+	end
+
+
+	function vc2010.antBuild(cfg)
+		if cfg.system == premake.ANDROID then
+			vstudio.vsandroid.antBuild(cfg)
 		end
 	end
 

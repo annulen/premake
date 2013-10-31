@@ -68,6 +68,7 @@
 		"actions/vstudio/vs2010_vcxproj_filters.lua",
 		"actions/vstudio/vs2012.lua",
 		"actions/vstudio/vs2013.lua",
+		"actions/vstudio/vsandroid.lua",
 
 		-- Clean action
 		"actions/clean/_clean.lua",

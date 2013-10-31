@@ -201,6 +201,9 @@
 						_p(2,'{%s}.%s.Build.0 = %s|%s', prj.uuid, descriptor, platform, architecture)
 					end
 
+--					if prjcfg.system == premake.ANDROID then
+--						vstudio.vsandroid.projectConfigurationPlatforms(prj, slncfg, prjcfg, slnplatform, prjplatform, architecture)
+--					end
 				end)
 			end
 		})

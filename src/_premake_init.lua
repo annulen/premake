@@ -49,6 +49,13 @@
 			"universal",
 			"x32",
 			"x64",
+			"armv5",
+			"armv7",
+			"mips",
+		},
+		aliases = {
+			x86 = 'x32',
+			x86_64 = 'x64',
 		},
 	}
 
@@ -212,6 +219,17 @@
 	}
 
 	api.register {
+		name = "floatabi",
+		scope = "config",
+		kind = "string",
+		allowed = {
+			"soft",
+			"softfp",
+			"hard",
+		},
+	}
+
+	api.register {
 		name = "flags",
 		scope = "config",
 		kind  = "string-list",
@@ -258,6 +276,16 @@
 			"Unicode",
 			"Unsafe",
 			"WinMain",
+			"EnablePIC",
+			"DisablePIC",
+			"EnableStrictAliasing",
+			"DisableStrictAliasing",
+			"EnableThumb",
+			"EnableNEON",
+			"SoftwareFloat",
+			"HardwareFloat",
+			"LittleEndian",
+			"BigEndian",
 		},
 		aliases = {
 			Optimise = 'Optimize',
@@ -560,6 +588,7 @@
 			"wii",
 			"windows",
 			"xbox360",
+			"android",
 		},
 	}
 
@@ -647,6 +676,7 @@
 			"Default",
 			"SSE",
 			"SSE2",
+			"NEON",
 		}
 	}
 
@@ -794,6 +824,7 @@
 			{ "macosx",   "Apple Mac OS X" },
 			{ "solaris",  "Solaris" },
 			{ "windows",  "Microsoft Windows" },
+			{ "android",  "Android" },
 		}
 	}
 

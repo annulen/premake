@@ -22,6 +22,7 @@
 		x32     = "x86",
 		x64     = "x64",
 		xbox360 = "Xbox 360",
+		android = "Android",
 	}
 
 	vstudio.vs2010_architectures =
