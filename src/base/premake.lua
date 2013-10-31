@@ -50,6 +50,10 @@
 	premake.X32         = "x32"
 	premake.X64         = "x64"
 	premake.XBOX360     = "xbox360"
+    premake.D           = "D"
+    premake.DMD         = "dmd"
+    premake.LDC2        = "ldc2"
+    premake.GDC         = "gdc"
 
 
 ---

@@ -877,3 +877,16 @@
 		return pairing
 	end
 
+
+-- 
+-- Returns true if the solution contains at least one D project.
+--
+
+	function premake.hasdproject(sln)
+		for prj in premake.solution.eachproject(sln) do
+			if project.isd(prj) then
+				return true
+			end
+		end
+	end
+

@@ -27,10 +27,11 @@
 		-- The capabilities of this action
 
 		valid_kinds     = { "ConsoleApp", "WindowedApp", "StaticLib", "SharedLib", "Makefile", "None" },
-		valid_languages = { "C", "C++", "C#" },
+		valid_languages = { "C", "C++", "C#", "D" },
 		valid_tools     = {
-			cc     = { "msc"   },
+			cc     = { "msc" },
 			dotnet = { "msnet" },
+			dc     = { "dmd", "gdc", "ldc" },
 		},
 
 		-- Solution and project generation logic

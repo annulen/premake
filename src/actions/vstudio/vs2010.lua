@@ -39,6 +39,8 @@
 		if premake.project.isdotnet(prj) then
 			premake.generate(prj, ".csproj", vstudio.cs2005.generate)
 			premake.generate(prj, ".csproj.user", vstudio.cs2005.generate_user)
+		elseif premake5.premake.isd(prj) then
+			premake.generate(prj, ".visualdproj", vstudio.visuald.generate)
 		else
 			premake.generate(prj, ".vcxproj", vstudio.vc2010.generate)
 			premake.generate(prj, ".vcxproj.user", vstudio.vc2010.generateUser)
@@ -70,10 +72,11 @@
 		-- The capabilities of this action
 
 		valid_kinds     = { "ConsoleApp", "WindowedApp", "StaticLib", "SharedLib", "Makefile", "None" },
-		valid_languages = { "C", "C++", "C#" },
+		valid_languages = { "C", "C++", "C#", "D" },
 		valid_tools     = {
-			cc     = { "msc"   },
+			cc     = { "msc" },
 			dotnet = { "msnet" },
+			dc     = { "dmd", "gdc", "ldc" },
 		},
 
 		-- Solution and project generation logic

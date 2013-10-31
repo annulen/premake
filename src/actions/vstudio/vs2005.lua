@@ -28,6 +28,8 @@
 		if premake.project.isdotnet(prj) then
 			premake.generate(prj, ".csproj", vstudio.cs2005.generate)
 			premake.generate(prj, ".csproj.user", vstudio.cs2005.generate_user)
+		elseif premake5.premake.isd(prj) then
+			premake.generate(prj, ".visualdproj", vstudio.visuald.generate)
 		else
 			premake.generate(prj, ".vcproj", vstudio.vc200x.generate)
 			premake.generate(prj, ".vcproj.user", vstudio.vc200x.generate_user)

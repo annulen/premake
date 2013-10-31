@@ -155,6 +155,9 @@
 		return path.hasextension(fname, { ".h", ".hh", ".hpp", ".hxx" })
 	end
 
+	function path.isdfile(fname)
+		return path.hasextension(fname, { ".d", ".di", ".ddoc" })
+	end
 
 
 --
