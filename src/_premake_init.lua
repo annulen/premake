@@ -667,6 +667,13 @@
 		}
 	}
 
+	api.register {
+		name = "startupproject",
+		scope = "solution",
+		kind = "string",
+		tokens = true,
+	}
+
 
 -----------------------------------------------------------------------------
 --

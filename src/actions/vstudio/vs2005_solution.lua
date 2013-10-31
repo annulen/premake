@@ -7,6 +7,7 @@
 	premake.vstudio.sln2005 = {}
 	local vstudio = premake.vstudio
 	local sln2005 = premake.vstudio.sln2005
+	local monodevelop = premake.vstudio.monodevelop
 	local solution = premake.solution
 	local project = premake.project
 	local tree = premake.tree
@@ -28,6 +29,9 @@
 		_p('Global')
 		sln2005.configurationPlatforms(sln)
 		sln2005.properties(sln)
+		if _ACTION == "monodevelop" then
+			monodevelop.solutionProperties(sln)
+		end
 		sln2005.NestedProjects(sln)
 		_p('EndGlobal')
 
@@ -42,7 +46,7 @@
 	function sln2005.header()
 		local action = premake.action.current()
 		_p('Microsoft Visual Studio Solution File, Format Version %d.00', action.vstudio.solutionVersion)
-		_p('# Visual Studio %s', _ACTION:sub(3))
+		_p('# Visual Studio %s', action.vstudio.versionName)
 	end
 
 
@@ -192,6 +196,13 @@
 					local descriptor = descriptors[cfg]
 					local platform = vstudio.projectPlatform(prjCfg)
 					local architecture = vstudio.archFromConfig(prjCfg, true)
+
+					if _ACTION == "monodevelop" then
+						-- HACK: MonoDevelop C/C++ projects don't seem to actually respect platform definitions
+						if prj.language == 'C' or prj.language == 'C++' then
+							architecture = "Any CPU"
+						end
+					end
 
 					_p(2,'{%s}.%s.ActiveCfg = %s|%s', prj.uuid, descriptor, platform, architecture)
 
