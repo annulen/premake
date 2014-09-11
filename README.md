@@ -1,5 +1,8 @@
-PREMAKE
+# PREMAKE #
+
 A build configuration tool
+
+[![Build Status](https://travis-ci.org/d-led/premake.svg?branch=master)](https://travis-ci.org/d-led/premake)
 
  Copyright (C) 2002-2014 by Jason Perkins
  Distributed under the terms of the BSD License, see LICENSE.txt

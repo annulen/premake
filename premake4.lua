@@ -33,7 +33,8 @@
 			"src/host/lua-5.1.4/src/luac.c",
 			"src/host/lua-5.1.4/src/print.c",
 			"src/host/lua-5.1.4/**.lua",
-			"src/host/lua-5.1.4/etc/*.c"
+			"src/host/lua-5.1.4/etc/*.c",
+			"src/host/lua-5.1.4/src/lauxlib.c"
 		}
 
 		configuration "Debug"

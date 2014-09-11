@@ -1,0 +1,7 @@
+language: c
+
+compiler:
+  - gcc
+
+script:
+  - ./travis-build.sh
