@@ -354,6 +354,7 @@
 			"Default",
 			"Fast",
 			"Strict",
+			"None",
 		}
 	}
 
